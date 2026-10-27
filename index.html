@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>One Piece Reality</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <!-- Pantalla de inicio / pausa -->
+    <div id="intro" class="intro">
+      <div class="intro-tarjeta">
+        <p class="intro-sub">Una maqueta navegable del mundo</p>
+        <h1>One Piece <span>Reality</span></h1>
+        <div class="intro-botones">
+          <button id="boton-explorar" class="boton">Haz clic para explorar</button>
+          <button id="boton-mapa" class="boton boton-secundario">Ver mapa</button>
+        </div>
+        <div class="controles">
+          <div><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> moverse</div>
+          <div><kbd>Ratón</kbd> mirar</div>
+          <div><kbd>Espacio</kbd> subir · <kbd>Shift</kbd> bajar</div>
+          <div><kbd>W</kbd><kbd>W</kbd> doble toque: sprint</div>
+          <div><kbd>Rueda</kbd> velocidad de vuelo</div>
+          <div><kbd>1</kbd>…<kbd>9</kbd> viaje rápido a una isla</div>
+          <div><kbd>E</kbd> ficha de la isla cercana</div>
+          <div><kbd>M</kbd> mapa desde arriba</div>
+          <div><kbd>Esc</kbd> pausa</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interfaz durante la exploración -->
+    <div id="hud" class="hud oculto">
+      <div class="hud-ubicacion">
+        <div id="hud-mar" class="hud-mar">East Blue</div>
+        <div id="hud-lugar" class="hud-lugar">Mar abierto</div>
+        <div id="hud-coords" class="hud-coords"></div>
+      </div>
+      <div id="hud-velocidad" class="hud-velocidad"></div>
+      <div id="hud-aviso" class="hud-aviso"></div>
+      <div id="hud-viajes" class="hud-viajes"></div>
+    </div>
+
+    <!-- Mapa desde arriba -->
+    <div id="mapa-ui" class="mapa-ui oculto">
+      <h2>Mapa del East Blue</h2>
+      <p class="mapa-pista">Haz clic en una isla para bajar a verla · Rueda: acercar · Arrastrar: mover · <kbd>M</kbd> o <kbd>Esc</kbd>: volver</p>
+      <div class="mapa-rosa" aria-hidden="true">
+        <svg viewBox="0 0 100 100"><polygon points="50,4 58,50 50,96 42,50" fill="#5a3520"/><polygon points="4,50 50,42 96,50 50,58" fill="#8a6a45"/><polygon points="50,4 58,50 42,50" fill="#c0392b"/><circle cx="50" cy="50" r="5" fill="#f3e3bf"/></svg>
+        <span>N</span>
+      </div>
+    </div>
+
+    <!-- Ficha de isla -->
+    <div id="ficha" class="ficha oculto">
+      <p id="ficha-mar" class="ficha-mar"></p>
+      <h2 id="ficha-nombre"></h2>
+      <p id="ficha-arco" class="ficha-arco"></p>
+      <p id="ficha-descripcion"></p>
+      <ul id="ficha-datos"></ul>
+      <p class="ficha-pista">Pulsa <kbd>E</kbd> para cerrar</p>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

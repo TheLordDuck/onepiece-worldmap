@@ -1,0 +1,274 @@
+:root {
+  --pergamino: #f3e3bf;
+  --madera: #5a3520;
+  --oro: #f6d77a;
+  --azul-mar: #1f6fa3;
+  --texto: #20160f;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #9fd0ea;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: #fff;
+}
+
+#app, #app canvas { display: block; width: 100%; height: 100%; }
+
+.capa-etiquetas { position: absolute; inset: 0; pointer-events: none; }
+
+.oculto { display: none !important; }
+
+/* Modo foto (tecla P o ?foto): solo el mundo, sin interfaz */
+.modo-foto .intro,
+.modo-foto .hud,
+.modo-foto .ficha,
+.modo-foto .capa-etiquetas { display: none !important; }
+
+/* Con la pantalla de inicio abierta no se muestran las etiquetas de las islas */
+body:has(.intro:not(.oculto)) .capa-etiquetas { visibility: hidden; }
+
+kbd {
+  display: inline-block;
+  min-width: 1.6em;
+  padding: 0.1em 0.45em;
+  margin: 0 0.12em;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  font: 600 0.85em/1.4 ui-monospace, Consolas, monospace;
+  text-align: center;
+}
+
+/* ---------- Intro / pausa ---------- */
+.intro {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(ellipse at center, rgba(10, 40, 70, 0.35), rgba(5, 15, 30, 0.75));
+  cursor: pointer;
+  padding: 16px;
+}
+
+.intro-tarjeta { text-align: center; max-width: 640px; }
+
+.intro h1 {
+  margin: 0 0 24px;
+  font: 400 clamp(48px, 10vw, 96px)/1 "Pirata One", Georgia, serif;
+  letter-spacing: 1px;
+  text-shadow: 0 4px 0 var(--madera), 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+.intro h1 span { color: var(--oro); }
+
+.intro-sub {
+  margin: 0 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.boton {
+  font: 600 18px/1 system-ui, sans-serif;
+  padding: 14px 28px;
+  border-radius: 999px;
+  border: 2px solid var(--oro);
+  background: var(--madera);
+  color: var(--oro);
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+.boton:hover { background: #6e4229; }
+
+.controles {
+  margin-top: 28px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px 20px;
+  font-size: 14px;
+  text-align: left;
+  opacity: 0.92;
+}
+
+/* ---------- HUD ---------- */
+.hud { position: fixed; inset: 0; pointer-events: none; }
+
+.hud-ubicacion {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: rgba(8, 30, 50, 0.45);
+  backdrop-filter: blur(6px);
+  min-width: 220px;
+}
+.hud-mar { font-size: 12px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--oro); }
+.hud-lugar { font: 400 24px/1.2 "Pirata One", Georgia, serif; margin-top: 2px; }
+.hud-coords { font: 12px ui-monospace, Consolas, monospace; opacity: 0.75; margin-top: 4px; }
+
+.hud-velocidad {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(8, 30, 50, 0.45);
+  font: 13px ui-monospace, Consolas, monospace;
+}
+
+.hud-aviso {
+  position: absolute;
+  left: 50%;
+  bottom: 90px;
+  transform: translateX(-50%);
+  font-size: 16px;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+  white-space: nowrap;
+}
+
+.hud-viajes {
+  position: absolute;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  max-width: calc(100% - 32px);
+}
+.hud-viajes span {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(8, 30, 50, 0.45);
+  font-size: 13px;
+}
+
+/* Mira central */
+.hud::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+/* ---------- Etiquetas de islas (CSS2D) ---------- */
+.etiqueta-isla {
+  text-align: center;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.75);
+  transition: opacity 0.2s;
+}
+.etiqueta-isla strong { display: block; font: 400 26px/1 "Pirata One", Georgia, serif; }
+.etiqueta-isla span {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--oro);
+}
+
+.etiqueta-lugar {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(8, 30, 50, 0.5);
+  font: 600 13px/1.3 system-ui, sans-serif;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+
+/* ---------- Ficha de isla (estilo pergamino) ---------- */
+.ficha {
+  position: fixed;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: min(360px, calc(100% - 32px));
+  padding: 22px 24px;
+  border-radius: 6px;
+  background: var(--pergamino);
+  color: var(--texto);
+  border: 3px solid var(--madera);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45), inset 0 0 40px rgba(120, 80, 30, 0.25);
+  font-family: Georgia, serif;
+  pointer-events: none;
+}
+.ficha h2 { margin: 2px 0 4px; font: 400 36px/1 "Pirata One", Georgia, serif; color: var(--madera); }
+.ficha-mar { margin: 0; font: 600 11px/1 system-ui, sans-serif; text-transform: uppercase; letter-spacing: 0.25em; color: var(--azul-mar); }
+.ficha-arco { margin: 0 0 12px; font-style: italic; opacity: 0.75; }
+.ficha ul { padding-left: 18px; margin: 12px 0; }
+.ficha li { margin: 4px 0; }
+.ficha-pista { margin: 12px 0 0; font: 12px system-ui, sans-serif; opacity: 0.65; }
+.ficha kbd { background: rgba(90, 53, 32, 0.12); border-color: rgba(90, 53, 32, 0.4); }
+
+/* ---------- Botones de la intro ---------- */
+.intro-botones { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.boton-secundario { background: rgba(8, 30, 50, 0.6); }
+.boton-secundario:hover { background: rgba(8, 30, 50, 0.8); }
+
+/* ---------- Modo mapa ---------- */
+.mapa-ui { position: fixed; inset: 0; pointer-events: none; }
+.mapa-ui h2 {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  margin: 0;
+  padding: 8px 24px;
+  border-radius: 6px;
+  background: var(--pergamino);
+  border: 3px solid var(--madera);
+  color: var(--madera);
+  font: 400 32px/1 "Pirata One", Georgia, serif;
+  white-space: nowrap;
+}
+.mapa-pista {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(8, 30, 50, 0.55);
+  font-size: 13px;
+  text-align: center;
+  max-width: calc(100% - 32px);
+}
+.mapa-rosa { position: absolute; right: 20px; bottom: 64px; width: 84px; text-align: center; }
+.mapa-rosa svg { width: 84px; height: 84px; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4)); }
+.mapa-rosa span { position: absolute; top: -14px; left: 0; right: 0; font: 700 14px/1 Georgia, serif; text-shadow: 0 1px 3px #000; }
+
+.etiqueta-arco { display: none; font-style: normal; font-size: 11px; opacity: 0.9; }
+.modo-mapa .etiqueta-isla { pointer-events: auto; cursor: pointer; }
+/* En el mapa, el nombre queda encima de la isla (no sobre ella) con un pequeño piquito */
+.modo-mapa .etiqueta-contenido {
+  position: relative;
+  transform: translateY(-58px);
+  padding: 5px 11px;
+  border-radius: 8px;
+  background: rgba(8, 30, 50, 0.6);
+  transition: transform 0.15s, background 0.15s;
+}
+.modo-mapa .etiqueta-contenido::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -7px;
+  margin-left: -7px;
+  border: 7px solid transparent;
+  border-bottom: 0;
+  border-top-color: rgba(8, 30, 50, 0.6);
+}
+.modo-mapa .etiqueta-isla:hover .etiqueta-contenido { transform: translateY(-58px) scale(1.12); background: rgba(90, 53, 32, 0.9); }
+.modo-mapa .etiqueta-isla strong { font-size: 21px; }
+.modo-mapa .etiqueta-arco { display: block; margin-top: 2px; }
+.modo-mapa #app canvas { cursor: grab; }
